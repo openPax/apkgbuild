@@ -2,7 +2,9 @@ package main
 
 import (
 	"bytes"
+	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -35,7 +37,7 @@ func main() {
 }
 
 func Exec(L *lua.LState) int {
-    command := L.ToString(1)
+  command := L.ToString(1)
 
 	shell, ok := L.GetGlobal("shell").(lua.LString)
 	if !ok {
@@ -53,7 +55,38 @@ func Exec(L *lua.LState) int {
 
 	L.Push(lua.LBool(true))
 
-    return 1
+  return 1
+}
+
+func Download(L *lua.LState) int {
+  url := L.ToString(1)
+  file := L.ToString(2)
+
+	resp, err := http.Get(url)
+	if err != nil {
+		L.Push(lua.LBool(false))
+		L.Push(lua.LString(err.Error()))
+		return 2
+	}
+
+	f, err := os.Create(file)
+	if err != nil {
+		L.Push(lua.LBool(false))
+		L.Push(lua.LString(err.Error()))
+		return 2
+	}
+
+	defer f.Close()
+
+	if _, err := io.Copy(f, resp.Body); err != nil {
+		L.Push(lua.LBool(false))
+		L.Push(lua.LString(err.Error()))
+		return 2
+	}
+
+	L.Push(lua.LBool(true))
+
+	return 1
 }
 
 func mainCommand(c *cli.Context) error {
@@ -79,6 +112,7 @@ func mainCommand(c *cli.Context) error {
     }
 
 	L.SetGlobal("exec", L.NewFunction(Exec))
+	L.SetGlobal("download", L.NewFunction(Download))
 
 	buildDependencies, ok := L.GetGlobal("build_dependencies").(*lua.LTable)
 	if !ok {
