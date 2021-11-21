@@ -21,13 +21,12 @@ import (
 
 var errorStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FF0000"))
 
-
 func main() {
-	app := &cli.App {
+	app := &cli.App{
 		Name:      "apkgbuild",
 		Usage:     "APKG Build Tool",
 		UsageText: "apkgbuild [options] <input> <output>",
-		Action: mainCommand,
+		Action:    mainCommand,
 	}
 
 	if err := app.Run(os.Args); err != nil {
@@ -37,7 +36,7 @@ func main() {
 }
 
 func Exec(L *lua.LState) int {
-  command := L.ToString(1)
+	command := L.ToString(1)
 
 	shell, ok := L.GetGlobal("shell").(lua.LString)
 	if !ok {
@@ -50,17 +49,18 @@ func Exec(L *lua.LState) int {
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
 		L.Push(lua.LBool(false))
-		return 1
+		L.Push(lua.LString(err.Error()))
+		return 2
 	}
 
 	L.Push(lua.LBool(true))
 
-  return 1
+	return 1
 }
 
 func Download(L *lua.LState) int {
-  url := L.ToString(1)
-  file := L.ToString(2)
+	url := L.ToString(1)
+	file := L.ToString(2)
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -90,26 +90,25 @@ func Download(L *lua.LState) int {
 }
 
 func mainCommand(c *cli.Context) error {
-    name, err := ioutil.TempDir("/tmp", "pax-chroot")
-    if err != nil {
-        return err
-    }
+	name, err := ioutil.TempDir("/tmp", "pax-chroot")
+	if err != nil {
+		return err
+	}
 
-    if err := util.SetupChroot(name); err != nil {
-        return err
-    }
+	if err := util.SetupChroot(name); err != nil {
+		return err
+	}
 
 	err = util.Cp(filepath.Join(os.Getenv("HOME"), "/.apkg/paxsources.list"), filepath.Join(name, "paxsources.list"))
 	if err != nil {
 		return err
 	}
-	
-	
-    L := lua.NewState()
-    defer L.Close()
-    if err := L.DoFile(c.Args().Get(0)); err != nil {
+
+	L := lua.NewState()
+	defer L.Close()
+	if err := L.DoFile(c.Args().Get(0)); err != nil {
 		return err
-    }
+	}
 
 	L.SetGlobal("exec", L.NewFunction(Exec))
 	L.SetGlobal("download", L.NewFunction(Download))
@@ -119,15 +118,14 @@ func mainCommand(c *cli.Context) error {
 		return &apkg.ErrorString{"Could not parse build_dependencies"}
 	}
 
-	
 	deps := make(map[lua.LValue]lua.LValue)
-	
+
 	buildDependencies.ForEach(func(l1, l2 lua.LValue) {
 		deps[l1] = l2
 	})
 
 	println("Installing build dependencies...")
-	
+
 	for k, v := range deps {
 		pkg, ok := k.(lua.LString)
 		if !ok {
@@ -138,7 +136,6 @@ func mainCommand(c *cli.Context) error {
 		if !ok {
 			return &apkg.ErrorString{"Could not parse build_dependencies"}
 		}
-
 
 		if err := pax.Install(name, pkg.String(), version.String(), true); err != nil {
 			return err
@@ -162,12 +159,12 @@ func mainCommand(c *cli.Context) error {
 		return err
 	}
 
-	if err := L.CallByParam(lua.P {
-        Fn: L.GetGlobal("build"),
-        NRet: 1,
-    }); err != nil {
-    	return err
-    }
+	if err := L.CallByParam(lua.P{
+		Fn:   L.GetGlobal("build"),
+		NRet: 1,
+	}); err != nil {
+		return err
+	}
 
 	if err := exit(); err != nil {
 		return err
@@ -309,13 +306,13 @@ func mainCommand(c *cli.Context) error {
 		pkgPostremoveString = pkgPostremove.String()
 	}
 
-	pkg := apkg.PackageRoot {
+	pkg := apkg.PackageRoot{
 		Spec: 1,
 		Package: apkg.Package{
-			Name: pkgName.String(),
-			Version: pkgVersion.String(),
+			Name:        pkgName.String(),
+			Version:     pkgVersion.String(),
 			Description: pkgDescription.String(),
-			Authors: pkgAuthorsList,
+			Authors:     pkgAuthorsList,
 			Maintainers: pkgMaintainersList,
 		},
 		Dependencies: apkg.Dependencies{
@@ -324,10 +321,10 @@ func mainCommand(c *cli.Context) error {
 		},
 		Files: pkgFilesMap,
 		Hooks: apkg.Hooks{
-			Preinstall: pkgPreinstallString,
+			Preinstall:  pkgPreinstallString,
 			Postinstall: pkgPostinstallString,
-			Preremove: pkgPreremoveString,
-			Postremove: pkgPostremoveString,
+			Preremove:   pkgPreremoveString,
+			Postremove:  pkgPostremoveString,
 		},
 	}
 
@@ -338,7 +335,7 @@ func mainCommand(c *cli.Context) error {
 	if err := encoder.Encode(pkg); err != nil {
 		return err
 	}
-	
+
 	ioutil.WriteFile(filepath.Join(name, "/pkg", "package.toml"), packageFileBuffer.Bytes(), 0777)
 
 	if err := os.Chdir(filepath.Join(name, "/pkg")); err != nil {
@@ -359,5 +356,5 @@ func mainCommand(c *cli.Context) error {
 		return err
 	}
 
-    return nil
+	return nil
 }
