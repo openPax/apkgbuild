@@ -127,7 +127,7 @@ func mainCommand(c *cli.Context) error {
 	println("Installing build dependencies...")
 
 	if err := pax.InstallMultiple(name, deps, true); err != nil {
-		return nil
+		return err
 	}
 
 	if err := os.Mkdir(filepath.Join(name, "/pkg"), 0777); err != nil {
