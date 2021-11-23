@@ -118,29 +118,15 @@ func mainCommand(c *cli.Context) error {
 		return &apkg.ErrorString{"Could not parse build_dependencies"}
 	}
 
-	deps := make(map[lua.LValue]lua.LValue)
+	var deps []string
 
 	buildDependencies.ForEach(func(l1, l2 lua.LValue) {
-		deps[l1] = l2
+		deps = append(deps, l1.String()+"@"+l2.String())
 	})
 
 	println("Installing build dependencies...")
 
-	for k, v := range deps {
-		pkg, ok := k.(lua.LString)
-		if !ok {
-			return &apkg.ErrorString{"Could not parse build_dependencies"}
-		}
-
-		version, ok := v.(lua.LString)
-		if !ok {
-			return &apkg.ErrorString{"Could not parse build_dependencies"}
-		}
-
-		if err := pax.Install(name, pkg.String(), version.String(), true); err != nil {
-			return err
-		}
-	}
+	pax.InstallMultiple(name, deps, true)
 
 	if err := os.Mkdir(filepath.Join(name, "/pkg"), 0777); err != nil {
 		return err
