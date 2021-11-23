@@ -10,7 +10,7 @@ require (
 	github.com/charmbracelet/lipgloss v0.4.0
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
 	github.com/innatical/apkg/v2 v2.0.15
-	github.com/innatical/pax-chroot v0.0.5
+	github.com/innatical/pax-chroot v0.0.6
 	github.com/innatical/pax/v2 v2.0.9
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
