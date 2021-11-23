@@ -95,9 +95,13 @@ func mainCommand(c *cli.Context) error {
 		return err
 	}
 
+	defer os.RemoveAll(name)
+
 	if err := util.SetupChroot(name); err != nil {
 		return err
 	}
+
+	defer util.CleanupChroot(name)
 
 	err = util.Cp(filepath.Join(os.Getenv("HOME"), "/.apkg/repos.toml"), filepath.Join(name, "repos.toml"))
 	if err != nil {
@@ -142,19 +146,27 @@ func mainCommand(c *cli.Context) error {
 
 	println("Entering chroot and running build function...")
 
-	exit, err := util.OpenChroot(name)
-	if err != nil {
-		return err
-	}
+	if err := func() error {
+		exit, err := util.OpenChroot(name)
+		if err != nil {
+			return err
+		}
 
-	if err := L.CallByParam(lua.P{
-		Fn:   L.GetGlobal("build"),
-		NRet: 1,
-	}); err != nil {
-		return err
-	}
+		if err := L.CallByParam(lua.P{
+			Fn:      L.GetGlobal("build"),
+			NRet:    1,
+			Protect: true,
+		}); err != nil {
+			exit()
+			return err
+		}
 
-	if err := exit(); err != nil {
+		if err := exit(); err != nil {
+			return err
+		}
+
+		return nil
+	}(); err != nil {
 		return err
 	}
 
@@ -181,12 +193,7 @@ func mainCommand(c *cli.Context) error {
 	pkgAuthorsList := []string{}
 
 	pkgAuthors.ForEach(func(l1, l2 lua.LValue) {
-		author, ok := l2.(lua.LString)
-		if !ok {
-			panic("Package author is not a string")
-		}
-
-		pkgAuthorsList = append(pkgAuthorsList, author.String())
+		pkgAuthorsList = append(pkgAuthorsList, l2.String())
 	})
 
 	pkgMaintainers, ok := L.GetGlobal("maintainers").(*lua.LTable)
@@ -197,12 +204,7 @@ func mainCommand(c *cli.Context) error {
 	pkgMaintainersList := []string{}
 
 	pkgMaintainers.ForEach(func(l1, l2 lua.LValue) {
-		maintainer, ok := l2.(lua.LString)
-		if !ok {
-			panic("Package maintainer is not a string")
-		}
-
-		pkgMaintainersList = append(pkgMaintainersList, maintainer.String())
+		pkgMaintainersList = append(pkgMaintainersList, l2.String())
 	})
 
 	pkgDependencies, ok := L.GetGlobal("dependencies").(*lua.LTable)
@@ -220,12 +222,7 @@ func mainCommand(c *cli.Context) error {
 	}
 
 	pkgRequiredDepedencies.ForEach(func(l1, l2 lua.LValue) {
-		name, ok := l2.(lua.LString)
-		if !ok {
-			panic("Package name is not a string")
-		}
-
-		pkgRequiredDependenciesList = append(pkgRequiredDependenciesList, name.String())
+		pkgRequiredDependenciesList = append(pkgRequiredDependenciesList, l2.String())
 	})
 
 	pkgOptionalDependencies, ok := pkgDependencies.RawGetString("optional").(*lua.LTable)
@@ -235,12 +232,7 @@ func mainCommand(c *cli.Context) error {
 	}
 
 	pkgOptionalDependencies.ForEach(func(l1, l2 lua.LValue) {
-		name, ok := l2.(lua.LString)
-		if !ok {
-			panic("Package maintainer is not a string")
-		}
-
-		pkgOptionalDependenciesList = append(pkgOptionalDependenciesList, name.String())
+		pkgOptionalDependenciesList = append(pkgOptionalDependenciesList, l2.String())
 	})
 
 	pkgFilesMap := make(map[string]string)
@@ -252,17 +244,7 @@ func mainCommand(c *cli.Context) error {
 	}
 
 	pkgFiles.ForEach(func(l1, l2 lua.LValue) {
-		name, ok := l1.(lua.LString)
-		if !ok {
-			panic("File target is not a string")
-		}
-
-		path, ok := l2.(lua.LString)
-		if !ok {
-			panic("File version is not a string")
-		}
-
-		pkgFilesMap[name.String()] = path.String()
+		pkgFilesMap[l1.String()] = l2.String()
 	})
 
 	pkgHooks, ok := L.GetGlobal("hooks").(*lua.LTable)
@@ -337,10 +319,6 @@ func mainCommand(c *cli.Context) error {
 	}
 
 	if err := os.Chdir(curr); err != nil {
-		return err
-	}
-
-	if err := util.CleanupChroot(name); err != nil {
 		return err
 	}
 
