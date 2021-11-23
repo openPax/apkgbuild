@@ -99,7 +99,7 @@ func mainCommand(c *cli.Context) error {
 		return err
 	}
 
-	err = util.Cp(filepath.Join(os.Getenv("HOME"), "/.apkg/paxsources.list"), filepath.Join(name, "paxsources.list"))
+	err = util.Cp(filepath.Join(os.Getenv("HOME"), "/.apkg/repos.toml"), filepath.Join(name, "repos.toml"))
 	if err != nil {
 		return err
 	}
