@@ -31,6 +31,8 @@ github.com/innatical/apkg/v2 v2.0.14 h1:gup+40l/WpfMqBQwt3sJ7ATFIA3mKG2XbvsjVTOE
 github.com/innatical/apkg/v2 v2.0.14/go.mod h1:HmuiplhmrBJ8ifllJG5tpGbduiPIbxdi1dHXXQxtlM0=
 github.com/innatical/apkg/v2 v2.0.15 h1:nP8ZZtw0AoT7wu5w5mYLmitL+oJ/eWxRKVhAuozIOMU=
 github.com/innatical/apkg/v2 v2.0.15/go.mod h1:HmuiplhmrBJ8ifllJG5tpGbduiPIbxdi1dHXXQxtlM0=
+github.com/innatical/apkg/v2 v2.0.16 h1:3/MGRDLcjqcYqRvPmnzh0itqwhhRgdin2d31/Vub9Aw=
+github.com/innatical/apkg/v2 v2.0.16/go.mod h1:paRA8M+CKHqarnfmO2TltZ329CxwcIoCm342auqV8TY=
 github.com/innatical/pax v1.0.4 h1:dc/OqSrpLFZAWG76LJDyO9YbnK0SrXBDvF1fi6HOV4U=
 github.com/innatical/pax v1.0.4/go.mod h1:K8TEmZ5YOKUGZonNOX5lXEqkb5gRZ104MUnhGbuSGzg=
 github.com/innatical/pax-chroot v0.0.0-20211031220540-eb2a29708d77 h1:zrRvGrnMfsqcE8s1nBjh6tP7qadwa/dgDbXRfTdyfzw=
@@ -49,12 +51,16 @@ github.com/innatical/pax-chroot v0.0.5 h1:rJUeRLSrFJ8RVEc+UInnbrweTVjvR4v1z/G7/F
 github.com/innatical/pax-chroot v0.0.5/go.mod h1:Rxh22OSWIbCJfZnuRLCBAm0Rfo0AewH8nl8oOhza704=
 github.com/innatical/pax-chroot v0.0.6 h1:3W10RjxCU7l37jl47pTZBJPe6IU3U+PwiH8cbxuur/E=
 github.com/innatical/pax-chroot v0.0.6/go.mod h1:/bNTcDPnu7UMKbm1Qb+pnQkNJTTS7Xbc+qmnc9DgzQ4=
+github.com/innatical/pax-chroot v0.0.7 h1:bf5yaCcC1w2lyP7RMWz+az6AInD7s+yS6fm+Qfb//FQ=
+github.com/innatical/pax-chroot v0.0.7/go.mod h1:/bNTcDPnu7UMKbm1Qb+pnQkNJTTS7Xbc+qmnc9DgzQ4=
 github.com/innatical/pax/v2 v2.0.7 h1:SpufZDg4K6Rjxn+VnYo/urIBHQIU6EKhObamcEASOYY=
 github.com/innatical/pax/v2 v2.0.7/go.mod h1:h7cgDIOXB1twNQaaEOoJKhcUbqUDrJAOq+r8YCXO4/4=
 github.com/innatical/pax/v2 v2.0.8 h1:9unmY47TWsg9dCYXu5BxHj5nMMJeEfsLFtr8KjEJKTc=
 github.com/innatical/pax/v2 v2.0.8/go.mod h1:zld2YJiMrC+GPOQ5sDORC+DdE0qs7kilLxwUXt1yHcs=
 github.com/innatical/pax/v2 v2.0.9 h1:0+C5/maBC1Rh3fgOeO7ERZODfcroG/op2fhcPATTU7A=
 github.com/innatical/pax/v2 v2.0.9/go.mod h1:V+5W/jbTj0H+uKMXk4/vhzOeg3SCROlk463bNfhqVkM=
+github.com/innatical/pax/v2 v2.0.10 h1:9r8QVc4WbJosQoJgWfaSxT1ArDHH4iJh+HVuU4ZCGYc=
+github.com/innatical/pax/v2 v2.0.10/go.mod h1:V+5W/jbTj0H+uKMXk4/vhzOeg3SCROlk463bNfhqVkM=
 github.com/klauspost/compress v1.13.6 h1:P76CopJELS0TiO2mebmnzgWaajssP/EszplttgQxcgc=
 github.com/klauspost/compress v1.13.6/go.mod h1:/3/Vjq9QcHkK5uEr5lBEmyoZ1iFhe47etQ6QUkpK6sk=
 github.com/lucasb-eyer/go-colorful v1.2.0 h1:1nnpGOrhyZZuNyfu1QjKiUICQ74+3FNCN69Aj6K7nkY=
