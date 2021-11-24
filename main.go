@@ -103,6 +103,17 @@ func mainCommand(c *cli.Context) error {
 
 	defer util.CleanupChroot(name)
 
+	cwd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+
+	if err := util.BindMount(name, "/mnt", cwd); err != nil {
+		return err
+	}
+
+	defer util.UnmountBind(name, "/mnt")
+
 	err = util.Cp(filepath.Join(os.Getenv("HOME"), "/.apkg/repos.toml"), filepath.Join(name, "repos.toml"))
 	if err != nil {
 		return err
@@ -222,7 +233,7 @@ func mainCommand(c *cli.Context) error {
 	}
 
 	pkgRequiredDepedencies.ForEach(func(l1, l2 lua.LValue) {
-		pkgRequiredDependenciesList = append(pkgRequiredDependenciesList, l2.String())
+		pkgRequiredDependenciesList = append(pkgRequiredDependenciesList, l1.String()+"@"+l2.String())
 	})
 
 	pkgOptionalDependencies, ok := pkgDependencies.RawGetString("optional").(*lua.LTable)
@@ -232,7 +243,7 @@ func mainCommand(c *cli.Context) error {
 	}
 
 	pkgOptionalDependencies.ForEach(func(l1, l2 lua.LValue) {
-		pkgOptionalDependenciesList = append(pkgOptionalDependenciesList, l2.String())
+		pkgOptionalDependenciesList = append(pkgOptionalDependenciesList, l1.String()+"@"+l2.String())
 	})
 
 	pkgFilesMap := make(map[string]string)
