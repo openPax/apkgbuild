@@ -71,6 +71,8 @@ github.com/innatical/pax/v2 v2.0.10 h1:9r8QVc4WbJosQoJgWfaSxT1ArDHH4iJh+HVuU4ZCG
 github.com/innatical/pax/v2 v2.0.10/go.mod h1:V+5W/jbTj0H+uKMXk4/vhzOeg3SCROlk463bNfhqVkM=
 github.com/innatical/pax/v2 v2.0.12 h1:cOzPfqdrR11IxcF1fZA56uZiO7W2Us3eD6CKnsNfpWc=
 github.com/innatical/pax/v2 v2.0.12/go.mod h1:i9gHJqi4DCcgbTdPPLjzpHZN64vt6jLLFy3CKEL/Yxg=
+github.com/innatical/pax/v2 v2.0.13 h1:5iH7K6FHKup2QrProyF27ML7La9TzmEAZjnTsyyCb3A=
+github.com/innatical/pax/v2 v2.0.13/go.mod h1:HQqfze1n52V88APxsV+aJku/PCJgfHAhYa16qn3FjvU=
 github.com/klauspost/compress v1.13.6 h1:P76CopJELS0TiO2mebmnzgWaajssP/EszplttgQxcgc=
 github.com/klauspost/compress v1.13.6/go.mod h1:/3/Vjq9QcHkK5uEr5lBEmyoZ1iFhe47etQ6QUkpK6sk=
 github.com/lucasb-eyer/go-colorful v1.2.0 h1:1nnpGOrhyZZuNyfu1QjKiUICQ74+3FNCN69Aj6K7nkY=
