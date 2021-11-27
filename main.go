@@ -69,6 +69,8 @@ func Download(L *lua.LState) int {
 		return 2
 	}
 
+	defer resp.Body.Close()
+
 	f, err := os.Create(file)
 	if err != nil {
 		L.Push(lua.LBool(false))
