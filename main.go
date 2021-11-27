@@ -163,16 +163,14 @@ func mainCommand(c *cli.Context) error {
 			return err
 		}
 
+		defer exit()
+
 		if err := L.CallByParam(lua.P{
 			Fn:      L.GetGlobal("build"),
 			NRet:    1,
 			Protect: true,
 		}); err != nil {
 			exit()
-			return err
-		}
-
-		if err := exit(); err != nil {
 			return err
 		}
 
