@@ -7,12 +7,13 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"os/user"
 	"path/filepath"
 
 	"github.com/BurntSushi/toml"
 	"github.com/charmbracelet/lipgloss"
 	apkg "github.com/innatical/apkg/v2/util"
-	pax "github.com/innatical/pax/v2/util"
+	pax "github.com/innatical/pax/v3/util"
 	"github.com/urfave/cli/v2"
 
 	"github.com/innatical/pax-chroot/util"
@@ -143,7 +144,13 @@ func mainCommand(c *cli.Context) error {
 
 	println("Installing build dependencies...")
 
-	if err := pax.InstallMultiple(name, deps, true); err != nil {
+	usr, err := user.Current()
+	if err != nil {
+		println(err.Error())
+		os.Exit(1)
+	}
+
+	if err := pax.InstallMultiple(name, filepath.Join(usr.HomeDir, "/.apkg", "cache"), deps, true); err != nil {
 		return err
 	}
 
